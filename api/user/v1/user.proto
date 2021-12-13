@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package api.user.v1;
+
+import "google/api/annotations.proto";
+
+// 建议包名简称为"service_版本号"，不支持点号连接
+option go_package = "double/api/user/v1;user_v1";
+
+service User {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply);
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
+  rpc GetUser (GetUserRequest) returns (GetUserReply);
+  rpc ListUser (ListUserRequest) returns (ListUserReply) {
+    		option (google.api.http) = {
+    			get: "/init_http"
+    		};
+  };
+}
+
+message CreateUserRequest {}
+message CreateUserReply {}
+
+message UpdateUserRequest {}
+message UpdateUserReply {}
+
+message DeleteUserRequest {}
+message DeleteUserReply {}
+
+message GetUserRequest {}
+message GetUserReply {}
+
+message ListUserRequest {}
+message ListUserReply {}
