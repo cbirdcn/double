@@ -8,28 +8,127 @@ import "google/api/annotations.proto";
 option go_package = "double/api/user/v1;user_v1";
 
 service User {
-  rpc CreateUser (CreateUserRequest) returns (CreateUserReply);
-  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply);
-  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
-  rpc GetUser (GetUserRequest) returns (GetUserReply);
-  rpc ListUser (ListUserRequest) returns (ListUserReply) {
-    		option (google.api.http) = {
-    			get: "/init_http"
-    		};
+  // 增删改查列
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply){
+    option (google.api.http) = {
+      post : "v1/user"
+      body : "*"
+    };
   };
+  rpc BanUser (BanUserRequest) returns (BanUserReply);
+  rpc UpdateUserName (UpdateUserNameRequest) returns (UpdateUserNameReply);
+  rpc UpdateUserPassword (UpdateUserPasswordRequest) returns (UpdateUserPasswordReply);
+  rpc GetUser (GetUserRequest) returns (GetUserReply);
+  rpc ListUser (ListUserRequest) returns (ListUserReply) {};
+  // 登录、登出
+  rpc UserLogin (UserLoginRequest) returns (UserLoginReply);
+  rpc UserLogout (UserLogoutRequest) returns (UserLogoutReply);
 }
 
-message CreateUserRequest {}
-message CreateUserReply {}
+message UserDetail {
+  int64 id = 1;
+  string userName = 2;
+  string clubName = 3;
+  string createdAt = 4;
+}
 
-message UpdateUserRequest {}
-message UpdateUserReply {}
+// 创建角色（角色名、俱乐部名称唯一）
+message CreateUserRequest {
+  string userName = 1;
+  string password = 2;
+  string clubName = 3;
+}
+message CreateUserReply {
+  UserDetail userDetail = 1;
+}
 
-message DeleteUserRequest {}
-message DeleteUserReply {}
+// todo
+//// 确认密码符合格式要求
+//message VerifyPasswordRequest {
+//  string userName = 1;
+//  string password = 2;
+//}
+//
+//message VerifyPasswordReply {
+//  bool ok = 1;
+//}
+//
+//// 确认角色名是否可用
+//message VerifyUserNameRequest {
+//  string username = 1;
+//}
+//
+//message VerifyUserNameReply {
+//  bool ok = 1;
+//}
+//
+//// 确认俱乐部名是否可用
+//message VerifyClubNameRequest {
+//  string password = 2;
+//}
+//
+//message VerifyClubNameReply {
+//  bool ok = 1;
+//}
 
-message GetUserRequest {}
-message GetUserReply {}
+// 禁用角色，不会物理删除
+message BanUserRequest {
+  int64 id = 1;
+}
+message BanUserReply {
+  bool res = 1;
+}
 
-message ListUserRequest {}
-message ListUserReply {}
+// 改名
+message UpdateUserNameRequest {
+  int64 id = 1;
+  string newUserName = 2;
+}
+message UpdateUserNameReply {
+  bool res = 1;
+}
+
+// 换密码
+message UpdateUserPasswordRequest {
+  int64 id = 1;
+  string newUserPassword = 2;
+}
+message UpdateUserPasswordReply {
+  bool res = 1;
+}
+
+// 查询单一角色信息
+message GetUserRequest {
+  int64 id = 1;
+}
+message GetUserReply {
+  UserDetail userDetail = 1;
+}
+
+// 批量查询角色信息
+message ListUserRequest {
+  int64 id = 1;
+}
+message ListUserReply {
+  repeated UserDetail userDetails = 1;
+}
+
+// 登录
+message UserLoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message UserLoginReply {
+  bool ok = 1;
+  UserDetail userDetail = 2;
+}
+
+// 登出
+message UserLogoutRequest {
+  int64 id = 1;
+}
+
+message UserLogoutReply {
+  bool ok = 1;
+}

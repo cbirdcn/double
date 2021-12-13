@@ -18,35 +18,35 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 type UserHTTPServer interface {
-	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
 }
 
 func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r := s.Route("/")
-	r.GET("/init_http", _User_ListUser0_HTTP_Handler(srv))
+	r.POST("v1/user", _User_CreateUser0_HTTP_Handler(srv))
 }
 
-func _User_ListUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+func _User_CreateUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		var in CreateUserRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, "/api.user.v1.User/ListUser")
+		http.SetOperation(ctx, "/api.user.v1.User/CreateUser")
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUser(ctx, req.(*ListUserRequest))
+			return srv.CreateUser(ctx, req.(*CreateUserRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListUserReply)
+		reply := out.(*CreateUserReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type UserHTTPClient interface {
-	ListUser(ctx context.Context, req *ListUserRequest, opts ...http.CallOption) (rsp *ListUserReply, err error)
+	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserReply, err error)
 }
 
 type UserHTTPClientImpl struct {
@@ -57,13 +57,13 @@ func NewUserHTTPClient(client *http.Client) UserHTTPClient {
 	return &UserHTTPClientImpl{client}
 }
 
-func (c *UserHTTPClientImpl) ListUser(ctx context.Context, in *ListUserRequest, opts ...http.CallOption) (*ListUserReply, error) {
-	var out ListUserReply
-	pattern := "/init_http"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation("/api.user.v1.User/ListUser"))
+func (c *UserHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserReply, error) {
+	var out CreateUserReply
+	pattern := "v1/user"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation("/api.user.v1.User/CreateUser"))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

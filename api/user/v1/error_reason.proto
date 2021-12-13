@@ -10,4 +10,7 @@ enum ErrorReason {
 
   USER_NOT_FOUND = 0 [(errors.code) = 404];
   CONTENT_MISSING = 1 [(errors.code) = 400];
+  UNKNOWN_ERROR = 1001;
+  USER_NAME_EXIST = 1002;
+  CLUB_NAME_EXIST = 1003;
 }

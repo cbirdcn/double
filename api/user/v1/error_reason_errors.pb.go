@@ -28,3 +28,30 @@ func IsContentMissing(err error) bool {
 func ErrorContentMissing(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_CONTENT_MISSING.String(), fmt.Sprintf(format, args...))
 }
+
+func IsUnknownError(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_UNKNOWN_ERROR.String() && e.Code == 500
+}
+
+func ErrorUnknownError(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_UNKNOWN_ERROR.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserNameExist(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_NAME_EXIST.String() && e.Code == 500
+}
+
+func ErrorUserNameExist(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USER_NAME_EXIST.String(), fmt.Sprintf(format, args...))
+}
+
+func IsClubNameExist(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_CLUB_NAME_EXIST.String() && e.Code == 500
+}
+
+func ErrorClubNameExist(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_CLUB_NAME_EXIST.String(), fmt.Sprintf(format, args...))
+}
