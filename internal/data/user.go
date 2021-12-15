@@ -28,15 +28,26 @@ func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) (int64, error
 	if r.UserNameCheckExist(ctx, user.UserName){
 		return 0, user_v1.ErrorUserNameExist("user name %s exist", user.UserName)
 	}
+	if r.UserNameCheckExist(ctx, user.UserName){
+		return 0, user_v1.ErrorUserNameExist("user name %s exist", user.UserName)
+	}
 	if r.ClubNameCheckExist(ctx, user.ClubName){
 		return 0, user_v1.ErrorClubNameExist("club name %s exist", user.ClubName)
 	}
 	// 忽略密码检查
+	// 忽略判空和屏蔽词
 
 	r.data.rdb.SAdd(ctx, getUserNameSetKey(), user.UserName)
 	r.data.rdb.SAdd(ctx, getClubNameSetKey(), user.ClubName)
-	// 获取自增id
-	user.ID = getAutoIncrementId()
+	// 获取自增id(只锁拿id过程，如果后续操作出现问题，会出现有的id没有绑定角色的情况)
+	lockKey := "ai_user_id"
+	user.ID, _ = getAutoIncId(ctx, r.data.rdb, lockKey)
+	if user.ID == 0 {
+		// 解锁绑定到集合中的唯一昵称
+		r.data.rdb.SRem(ctx, getUserNameSetKey(), user.UserName).Val()
+		r.data.rdb.SRem(ctx, getClubNameSetKey(), user.ClubName).Val()
+		return 0, user_v1.ErrorUserMakeAutoIdFail("make auto increment id fail : %s", lockKey)
+	}
 
 	// 密文存储password
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -45,7 +56,12 @@ func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) (int64, error
 	}
 	user.Password = string(hash)
 
-	r.data.rdb.HMSet(ctx, getUserKey(user.ID), structs.Map(user))
+	res := r.data.rdb.HMSet(ctx, getUserKey(user.ID), structs.Map(user)).Val()
+	// XXX：if grpc timeout not enough to continue, go-redis hmset res may got false
+	if !res {
+		r.data.rdb.SRem(ctx, getUserNameSetKey(), user.UserName).Val()
+		r.data.rdb.SRem(ctx, getClubNameSetKey(), user.ClubName).Val()
+	}
 
 	// 判断name->id的索引关系是否存在，不存在就设置，存在就退出
 	// todo:锁

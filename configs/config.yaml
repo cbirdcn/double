@@ -1,10 +1,10 @@
 server:
   http:
     addr: 0.0.0.0:8000
-    timeout: 1s
+    timeout: 1.2s
   grpc:
     addr: 0.0.0.0:9000
-    timeout: 1s
+    timeout: 1.2s
 data:
   database:
     driver: mysql
@@ -13,3 +13,4 @@ data:
     addr: host.docker.internal:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
+    db: 11

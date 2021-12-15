@@ -98,7 +98,7 @@ type CreateUserRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserName string `protobuf:"bytes,1,opt,name=userName,proto3" json:"userName,omitempty"`
+	UserName string `protobuf:"bytes,1,opt,name=userName,proto3" json:"userName,omitempty"` // todo:validator:not empty
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	ClubName string `protobuf:"bytes,3,opt,name=clubName,proto3" json:"clubName,omitempty"`
 }

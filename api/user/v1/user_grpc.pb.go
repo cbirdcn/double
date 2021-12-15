@@ -28,7 +28,7 @@ type UserClient interface {
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
 	// 登录
 	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginReply, error)
-	// 登出（暂不支持）
+	// 登出（忽略）
 	UserLogout(ctx context.Context, in *UserLogoutRequest, opts ...grpc.CallOption) (*UserLogoutReply, error)
 }
 
@@ -126,7 +126,7 @@ type UserServer interface {
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
 	// 登录
 	UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error)
-	// 登出（暂不支持）
+	// 登出（忽略）
 	UserLogout(context.Context, *UserLogoutRequest) (*UserLogoutReply, error)
 	mustEmbedUnimplementedUserServer()
 }

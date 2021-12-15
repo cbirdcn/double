@@ -91,3 +91,12 @@ func IsUserBanned(err error) bool {
 func ErrorUserBanned(format string, args ...interface{}) *errors.Error {
 	return errors.New(500, ErrorReason_USER_BANNED.String(), fmt.Sprintf(format, args...))
 }
+
+func IsUserMakeAutoIdFail(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_MAKE_AUTO_ID_FAIL.String() && e.Code == 500
+}
+
+func ErrorUserMakeAutoIdFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USER_MAKE_AUTO_ID_FAIL.String(), fmt.Sprintf(format, args...))
+}

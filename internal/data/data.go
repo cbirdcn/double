@@ -3,9 +3,9 @@ package data
 import (
 	"double/internal/conf"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/google/wire"
-	"github.com/go-redis/redis/v8"
 	"github.com/go-redis/redis/extra/redisotel"
+	"github.com/go-redis/redis/v8"
+	"github.com/google/wire"
 )
 
 // ProviderSet is data providers.

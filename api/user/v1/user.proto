@@ -69,7 +69,7 @@ message UserDetail {
 
 // 创建角色（角色名、俱乐部名称唯一）
 message CreateUserRequest {
-  string userName = 1;
+  string userName = 1; // todo:validator:not empty
   string password = 2;
   string clubName = 3;
 }
