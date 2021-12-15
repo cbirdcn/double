@@ -55,3 +55,39 @@ func IsClubNameExist(err error) bool {
 func ErrorClubNameExist(format string, args ...interface{}) *errors.Error {
 	return errors.New(500, ErrorReason_CLUB_NAME_EXIST.String(), fmt.Sprintf(format, args...))
 }
+
+func IsUserPasswordDifferent(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_PASSWORD_DIFFERENT.String() && e.Code == 500
+}
+
+func ErrorUserPasswordDifferent(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USER_PASSWORD_DIFFERENT.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserPasswordExist(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_PASSWORD_EXIST.String() && e.Code == 500
+}
+
+func ErrorUserPasswordExist(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USER_PASSWORD_EXIST.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserNameSame(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_NAME_SAME.String() && e.Code == 500
+}
+
+func ErrorUserNameSame(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USER_NAME_SAME.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserBanned(err error) bool {
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_BANNED.String() && e.Code == 500
+}
+
+func ErrorUserBanned(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USER_BANNED.String(), fmt.Sprintf(format, args...))
+}

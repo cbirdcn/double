@@ -25,7 +25,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		Password:  req.Password,
 		ClubName:  req.ClubName,
 		IsBanned:  false,
-		CreatedAt: time.Now().Local().Format("2006-01-02 03:04:05"),
+		CreatedAt: time.Now().Local().Format("2006-01-02 03:04:05"), // 服务器时区时间
 	})
 
 	get, _ := s.uc.Get(ctx, id)
@@ -39,22 +39,53 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 	return userDetail, err
 }
 func (s *UserService) UpdateUserName(ctx context.Context, req *pb.UpdateUserNameRequest) (*pb.UpdateUserNameReply, error) {
-	return &pb.UpdateUserNameReply{}, nil
+	res, err := s.uc.UpdateUserName(ctx, req.Id, req.NewUserName)
+	return &pb.UpdateUserNameReply{Res: res}, err
 }
 func (s *UserService) UpdateUserPassword(ctx context.Context, req *pb.UpdateUserPasswordRequest) (*pb.UpdateUserPasswordReply, error) {
-	return &pb.UpdateUserPasswordReply{}, nil
+	res, err := s.uc.UpdateUserPassword(ctx, req.NewUserPassword, &biz.User{
+		ID:       req.Id,
+		Password: req.OldUserPassword,
+	})
+	return &pb.UpdateUserPasswordReply{Res: res}, err
 }
 func (s *UserService) BanUser(ctx context.Context, req *pb.BanUserRequest) (*pb.BanUserReply, error) {
-	return &pb.BanUserReply{}, nil
+	res, err := s.uc.Ban(ctx, req.Id)
+	return &pb.BanUserReply{Res: res}, err
 }
 func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
-	return &pb.GetUserReply{}, nil
+	get, _ := s.uc.Get(ctx, req.Id)
+
+	userDetail := &pb.GetUserReply{UserDetail: &pb.UserDetail{
+		Id:       get.ID,
+		UserName: get.UserName,
+		ClubName: get.ClubName,
+		CreatedAt: get.CreatedAt,
+	}}
+	return userDetail, nil
 }
-func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
-	return &pb.ListUserReply{}, nil
-}
+//func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+//	return &pb.ListUserReply{}, nil
+//}
 func (s *UserService) UserLogin(ctx context.Context, req *pb.UserLoginRequest) (*pb.UserLoginReply, error) {
-	return &pb.UserLoginReply{}, nil
+	detail, err := s.uc.Login(ctx, &biz.User{
+		UserName: req.UserName,
+		Password: req.Password,
+	})
+
+	if err == nil {
+		return &pb.UserLoginReply{
+			Res: true,
+			UserDetail: &pb.UserDetail{
+				Id:        detail.ID,
+				UserName:  detail.UserName,
+				ClubName:  detail.ClubName,
+				CreatedAt: detail.CreatedAt,
+			},
+		}, err
+	}
+
+	return &pb.UserLoginReply{Res: false, UserDetail: &pb.UserDetail{}}, err
 }
 func (s *UserService) UserLogout(ctx context.Context, req *pb.UserLogoutRequest) (*pb.UserLogoutReply, error) {
 	return &pb.UserLogoutReply{}, nil

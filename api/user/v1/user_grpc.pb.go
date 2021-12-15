@@ -24,9 +24,11 @@ type UserClient interface {
 	UpdateUserName(ctx context.Context, in *UpdateUserNameRequest, opts ...grpc.CallOption) (*UpdateUserNameReply, error)
 	UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*UpdateUserPasswordReply, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
+	// todo:暂不支持，需要先完成id list
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
-	// 登录、登出
+	// 登录
 	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginReply, error)
+	// 登出（暂不支持）
 	UserLogout(ctx context.Context, in *UserLogoutRequest, opts ...grpc.CallOption) (*UserLogoutReply, error)
 }
 
@@ -120,9 +122,11 @@ type UserServer interface {
 	UpdateUserName(context.Context, *UpdateUserNameRequest) (*UpdateUserNameReply, error)
 	UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*UpdateUserPasswordReply, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
+	// todo:暂不支持，需要先完成id list
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
-	// 登录、登出
+	// 登录
 	UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error)
+	// 登出（暂不支持）
 	UserLogout(context.Context, *UserLogoutRequest) (*UserLogoutReply, error)
 	mustEmbedUnimplementedUserServer()
 }

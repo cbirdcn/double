@@ -15,14 +15,49 @@ service User {
       body : "*"
     };
   };
-  rpc BanUser (BanUserRequest) returns (BanUserReply);
-  rpc UpdateUserName (UpdateUserNameRequest) returns (UpdateUserNameReply);
-  rpc UpdateUserPassword (UpdateUserPasswordRequest) returns (UpdateUserPasswordReply);
-  rpc GetUser (GetUserRequest) returns (GetUserReply);
-  rpc ListUser (ListUserRequest) returns (ListUserReply) {};
-  // 登录、登出
-  rpc UserLogin (UserLoginRequest) returns (UserLoginReply);
-  rpc UserLogout (UserLogoutRequest) returns (UserLogoutReply);
+  rpc BanUser (BanUserRequest) returns (BanUserReply) {
+    option (google.api.http) = {
+      put : "v1/user_ban/{id}"
+      body : "*"
+    };
+  };
+  rpc UpdateUserName (UpdateUserNameRequest) returns (UpdateUserNameReply) {
+    option (google.api.http) = {
+      put : "v1/user_update_name/{id}"
+      body : "*"
+    };
+  };
+  rpc UpdateUserPassword (UpdateUserPasswordRequest) returns (UpdateUserPasswordReply) {
+    option (google.api.http) = {
+      put : "v1/user_update_password/{id}"
+      body : "*"
+    };
+  };
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {
+    option (google.api.http) = {
+      get : "v1/user/{id}"
+    };
+  };
+  // todo:暂不支持，需要先完成id list
+  rpc ListUser (ListUserRequest) returns (ListUserReply) {
+    option (google.api.http) = {
+      get : "v1/user"
+    };
+  };
+  // 登录
+  rpc UserLogin (UserLoginRequest) returns (UserLoginReply) {
+    option (google.api.http) = {
+      post : "v1/login"
+      body : "*"
+    };
+  };
+  // 登出（忽略）
+  rpc UserLogout (UserLogoutRequest) returns (UserLogoutReply) {
+    option (google.api.http) = {
+      post : "v1/logout"
+      body : "*"
+    };
+  };
 }
 
 message UserDetail {
@@ -42,7 +77,7 @@ message CreateUserReply {
   UserDetail userDetail = 1;
 }
 
-// todo
+// todo：ajax请求，忽略
 //// 确认密码符合格式要求
 //message VerifyPasswordRequest {
 //  string userName = 1;
@@ -91,7 +126,8 @@ message UpdateUserNameReply {
 // 换密码
 message UpdateUserPasswordRequest {
   int64 id = 1;
-  string newUserPassword = 2;
+  string oldUserPassword = 2;
+  string newUserPassword = 3;
 }
 message UpdateUserPasswordReply {
   bool res = 1;
@@ -107,7 +143,6 @@ message GetUserReply {
 
 // 批量查询角色信息
 message ListUserRequest {
-  int64 id = 1;
 }
 message ListUserReply {
   repeated UserDetail userDetails = 1;
@@ -115,12 +150,12 @@ message ListUserReply {
 
 // 登录
 message UserLoginRequest {
-  string username = 1;
+  string userName = 1;
   string password = 2;
 }
 
 message UserLoginReply {
-  bool ok = 1;
+  bool res = 1;
   UserDetail userDetail = 2;
 }
 
@@ -130,5 +165,5 @@ message UserLogoutRequest {
 }
 
 message UserLogoutReply {
-  bool ok = 1;
+  bool res = 1;
 }

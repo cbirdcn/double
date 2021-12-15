@@ -18,3 +18,7 @@ func getAutoIncrementId() int64{
 	// todo
 	return 1
 }
+
+func getIdByNameHashKey() string{
+	return "name_to_id"
+}

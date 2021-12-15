@@ -19,20 +19,23 @@ type UserDetail struct {
 	ID int64
 	UserName string
 	ClubName string
+	IsBanned bool
 	CreatedAt string
 }
 
 // repo业务逻辑接口：在data中实现
 type UserRepo interface {
 	CreateUser(context.Context, *User) (int64, error)
-	BanUser(context.Context, *User) error
-	UpdateUser(context.Context, *User) error
+	BanUser(context.Context, int64) (bool, error)
+	UpdateUserName(context.Context, int64, string) (bool, error)
+	UpdateUserPassword(context.Context, string, *User) (bool, error)
 	GetUser(context.Context, int64) (UserDetail, error)
-	ListUser(context.Context, *User) error
-	UserLogin(context.Context, *User) error
+	//ListUser(context.Context) ([]*User, error)
+	UserLogin(context.Context, *User) (UserDetail, error)
 	UserLogout(context.Context, *User) error
-	UserCheckExist(context.Context, *User) bool
-	ClubCheckExist(context.Context, *User) bool
+	UserIdCheckExist(context.Context, int64) bool
+	UserNameCheckExist(context.Context, string) bool
+	ClubNameCheckExist(context.Context, string) bool
 }
 
 // useCase，在service中注入后，可以调用useCase的方法
@@ -41,7 +44,7 @@ type UserUseCase struct {
 	log  *log.Helper
 }
 
-// useCase的方法：给service调用。内部调用repo的方法操作repo
+// useCase以及其方法：给service调用。内部调用repo的方法操作repo
 func NewUserUseCase(repo UserRepo, logger log.Logger) *UserUseCase {
 	return &UserUseCase{repo: repo, log: log.NewHelper(logger)}
 }
@@ -50,26 +53,30 @@ func (uc *UserUseCase) Create(ctx context.Context, user *User) (int64, error) {
 	return uc.repo.CreateUser(ctx, user)
 }
 
-func (uc *UserUseCase) Ban(ctx context.Context, g *User) error {
-	return uc.repo.BanUser(ctx, g)
+func (uc *UserUseCase) Ban(ctx context.Context, id int64) (bool, error) {
+	return uc.repo.BanUser(ctx, id)
 }
 
-func (uc *UserUseCase) Update(ctx context.Context, g *User) error {
-	return uc.repo.UpdateUser(ctx, g)
+func (uc *UserUseCase) UpdateUserName(ctx context.Context, id int64, newUserName string) (bool, error) {
+	return uc.repo.UpdateUserName(ctx, id, newUserName)
+}
+
+func (uc *UserUseCase) UpdateUserPassword(ctx context.Context, newUserPassword string, user *User) (bool, error) {
+	return uc.repo.UpdateUserPassword(ctx, newUserPassword, user)
 }
 
 func (uc *UserUseCase) Get(ctx context.Context, id int64) (UserDetail, error) {
 	return uc.repo.GetUser(ctx, id)
 }
 
-func (uc *UserUseCase) List(ctx context.Context, g *User) error {
-	return nil
+//func (uc *UserUseCase) List(ctx context.Context) ([]*User, error) {
+//	return uc.repo.ListUser(ctx)
+//}
+
+func (uc *UserUseCase) Login(ctx context.Context, user *User) (UserDetail, error) {
+	return uc.repo.UserLogin(ctx, user)
 }
 
-func (uc *UserUseCase) Login(ctx context.Context, g *User) error {
-	return nil
-}
-
-func (uc *UserUseCase) Logout(ctx context.Context, g *User) error {
-	return nil
+func (uc *UserUseCase) Logout(ctx context.Context, user *User) error {
+	return uc.repo.UserLogout(ctx, user)
 }
