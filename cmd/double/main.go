@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/go-kratos/kratos/v2/registry"
 	"os"
 
 	"double/internal/conf"
@@ -30,7 +31,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {
+func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, rr registry.Registrar) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -41,6 +42,7 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {
 			hs,
 			gs,
 		),
+		kratos.Registrar(rr), // 注册
 	)
 }
 
@@ -71,7 +73,13 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := initApp(bc.Server, bc.Data, logger)
+	// 由于registrar在data.go中注入，所以initApp需要传入registry配置参数
+	var rc conf.Registry
+	if err := c.Scan(&rc); err != nil {
+		panic(err)
+	}
+
+	app, cleanup, err := initApp(bc.Server, &rc, bc.Data, logger)
 	if err != nil {
 		panic(err)
 	}

@@ -46,4 +46,13 @@ message Data {
   Redis redis = 2;
 }
 
+// 注册中心
+message Registry {
+  message Consul {
+    string address = 1;
+    string scheme = 2;
+  }
+  Consul consul = 1;
+}
+
 // 修改配置proto后需要make config生成pb.go

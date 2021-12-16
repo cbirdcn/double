@@ -121,3 +121,35 @@ res
   }
 }
 ```
+
+## ListUser
+
+```json
+{}
+```
+
+```json
+{
+  "userDetails": [
+    {
+      "id": "1",
+      "userName": "user1",
+      "clubName": "club1",
+      "createdAt": "2021-12-15 02:47:52"
+    },
+    {
+      "id": "3",
+      "userName": "user3",
+      "clubName": "club3",
+      "createdAt": "2021-12-15 02:47:52"
+    },
+    {
+      "id": "2",
+      "userName": "user2",
+      "clubName": "club2",
+      "createdAt": "2021-12-15 02:47:52"
+    },
+    ...
+  ]
+}
+```

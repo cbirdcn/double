@@ -18,17 +18,21 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
-	// 增删改查列
+	// 增
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserReply, error)
+	// 禁用
 	BanUser(ctx context.Context, in *BanUserRequest, opts ...grpc.CallOption) (*BanUserReply, error)
+	// 改名
 	UpdateUserName(ctx context.Context, in *UpdateUserNameRequest, opts ...grpc.CallOption) (*UpdateUserNameReply, error)
+	// 改密
 	UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*UpdateUserPasswordReply, error)
+	// 查
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
-	// todo:暂不支持，需要先完成id list
+	// 列
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
 	// 登录
 	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginReply, error)
-	// 登出（忽略）
+	// 登出（略）
 	UserLogout(ctx context.Context, in *UserLogoutRequest, opts ...grpc.CallOption) (*UserLogoutReply, error)
 }
 
@@ -116,17 +120,21 @@ func (c *userClient) UserLogout(ctx context.Context, in *UserLogoutRequest, opts
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
-	// 增删改查列
+	// 增
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
+	// 禁用
 	BanUser(context.Context, *BanUserRequest) (*BanUserReply, error)
+	// 改名
 	UpdateUserName(context.Context, *UpdateUserNameRequest) (*UpdateUserNameReply, error)
+	// 改密
 	UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*UpdateUserPasswordReply, error)
+	// 查
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
-	// todo:暂不支持，需要先完成id list
+	// 列
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
 	// 登录
 	UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error)
-	// 登出（忽略）
+	// 登出（略）
 	UserLogout(context.Context, *UserLogoutRequest) (*UserLogoutReply, error)
 	mustEmbedUnimplementedUserServer()
 }

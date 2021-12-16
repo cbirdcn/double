@@ -29,9 +29,9 @@ type UserRepo interface {
 	BanUser(context.Context, int64) (bool, error)
 	UpdateUserName(context.Context, int64, string) (bool, error)
 	UpdateUserPassword(context.Context, string, *User) (bool, error)
-	GetUser(context.Context, int64) (UserDetail, error)
-	//ListUser(context.Context) ([]*User, error)
-	UserLogin(context.Context, *User) (UserDetail, error)
+	GetUser(context.Context, int64) (*UserDetail, error)
+	ListUser(context.Context) ([]*UserDetail, error)
+	UserLogin(context.Context, *User) (*UserDetail, error)
 	UserLogout(context.Context, *User) error
 	UserIdCheckExist(context.Context, int64) bool
 	UserNameCheckExist(context.Context, string) bool
@@ -65,15 +65,15 @@ func (uc *UserUseCase) UpdateUserPassword(ctx context.Context, newUserPassword s
 	return uc.repo.UpdateUserPassword(ctx, newUserPassword, user)
 }
 
-func (uc *UserUseCase) Get(ctx context.Context, id int64) (UserDetail, error) {
+func (uc *UserUseCase) Get(ctx context.Context, id int64) (*UserDetail, error) {
 	return uc.repo.GetUser(ctx, id)
 }
 
-//func (uc *UserUseCase) List(ctx context.Context) ([]*User, error) {
-//	return uc.repo.ListUser(ctx)
-//}
+func (uc *UserUseCase) List(ctx context.Context) ([]*UserDetail, error) {
+	return uc.repo.ListUser(ctx)
+}
 
-func (uc *UserUseCase) Login(ctx context.Context, user *User) (UserDetail, error) {
+func (uc *UserUseCase) Login(ctx context.Context, user *User) (*UserDetail, error) {
 	return uc.repo.UserLogin(ctx, user)
 }
 

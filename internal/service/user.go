@@ -64,9 +64,19 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	}}
 	return userDetail, nil
 }
-//func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
-//	return &pb.ListUserReply{}, nil
-//}
+func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+	list, _ := s.uc.List(ctx)
+	res := make([]*pb.UserDetail, 0)
+	for _,v := range list {
+		res = append(res, &pb.UserDetail{
+			Id:        v.ID,
+			UserName:  v.UserName,
+			ClubName:  v.ClubName,
+			CreatedAt: v.CreatedAt,
+		})
+	}
+	return &pb.ListUserReply{UserDetails: res}, nil
+}
 func (s *UserService) UserLogin(ctx context.Context, req *pb.UserLoginRequest) (*pb.UserLoginReply, error) {
 	detail, err := s.uc.Login(ctx, &biz.User{
 		UserName: req.UserName,

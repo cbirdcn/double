@@ -147,12 +147,12 @@ func (r *userRepo) UpdateUserPassword(ctx context.Context, newUserPassword strin
 	return true, nil
 }
 
-func (r *userRepo) GetUser(ctx context.Context, id int64) (biz.UserDetail, error) {
+func (r *userRepo) GetUser(ctx context.Context, id int64) (*biz.UserDetail, error) {
 	values := r.data.rdb.HGetAll(ctx, getUserKey(id))
 	val := values.Val()
 	ID, _ := strconv.ParseInt(val["ID"], 10, 64)
 	IsBanned, _ := strconv.ParseBool(val["IsBanned"])
-	return biz.UserDetail{
+	return &biz.UserDetail{
 		ID:        ID,
 		UserName:  val["UserName"],
 		ClubName:  val["ClubName"],
@@ -161,28 +161,36 @@ func (r *userRepo) GetUser(ctx context.Context, id int64) (biz.UserDetail, error
 	}, nil
 }
 
-//func (r *userRepo) ListUser(ctx context.Context) (users []*biz.User, error) {
-//	// todo：目前还没有存储id list
-//	return nil,nil
-//}
+// todo:page limit
+func (r *userRepo) ListUser(ctx context.Context) ([]*biz.UserDetail, error) {
+	ids := r.data.rdb.HVals(ctx, getIdByNameHashKey()).Val()
+	userDetails := make([]*biz.UserDetail, 0)
+	for _, idStr := range ids {
+		id, _ := strconv.ParseInt(idStr, 10, 64)
+		if detail, err := r.GetUser(ctx, id); err == nil {
+			userDetails = append(userDetails, detail)
+		}
+	}
+	return userDetails,nil
+}
 
-func (r *userRepo) UserLogin(ctx context.Context, user *biz.User) (biz.UserDetail, error) {
+func (r *userRepo) UserLogin(ctx context.Context, user *biz.User) (*biz.UserDetail, error) {
 	// todo:无挤号。无在线状态检测
 	id := r.UserIdByName(ctx, user.UserName)
 	if id == 0 {
-		return biz.UserDetail{}, user_v1.ErrorUserNotFound("user not found: %s", user.UserName)
+		return &biz.UserDetail{}, user_v1.ErrorUserNotFound("user not found: %s", user.UserName)
 	}
 
 	if !r.UserComparePasswordSame(ctx, user.Password, id) {
-		return biz.UserDetail{}, user_v1.ErrorUserPasswordDifferent("user password wrong")
+		return &biz.UserDetail{}, user_v1.ErrorUserPasswordDifferent("user password wrong")
 	}
 
 	if res, err := r.GetUser(ctx, id); err != nil {
-		return biz.UserDetail{}, user_v1.ErrorUserNotFound("user not found: %s", user.UserName)
+		return &biz.UserDetail{}, user_v1.ErrorUserNotFound("user not found: %s", user.UserName)
 	}else{
 		// 没有被封禁
 		if res.IsBanned {
-			return biz.UserDetail{}, user_v1.ErrorUserBanned("user banned: %s", user.UserName)
+			return &biz.UserDetail{}, user_v1.ErrorUserBanned("user banned: %s", user.UserName)
 		}else {
 			return res, nil
 		}

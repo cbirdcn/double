@@ -8,37 +8,41 @@ import "google/api/annotations.proto";
 option go_package = "double/api/user/v1;user_v1";
 
 service User {
-  // 增删改查列
+  // 增
   rpc CreateUser (CreateUserRequest) returns (CreateUserReply){
     option (google.api.http) = {
       post : "v1/user"
       body : "*"
     };
   };
+  // 禁用
   rpc BanUser (BanUserRequest) returns (BanUserReply) {
     option (google.api.http) = {
       put : "v1/user_ban/{id}"
       body : "*"
     };
   };
+  // 改名
   rpc UpdateUserName (UpdateUserNameRequest) returns (UpdateUserNameReply) {
     option (google.api.http) = {
       put : "v1/user_update_name/{id}"
       body : "*"
     };
   };
+  // 改密
   rpc UpdateUserPassword (UpdateUserPasswordRequest) returns (UpdateUserPasswordReply) {
     option (google.api.http) = {
       put : "v1/user_update_password/{id}"
       body : "*"
     };
   };
+  // 查
   rpc GetUser (GetUserRequest) returns (GetUserReply) {
     option (google.api.http) = {
       get : "v1/user/{id}"
     };
   };
-  // todo:暂不支持，需要先完成id list
+  // 列
   rpc ListUser (ListUserRequest) returns (ListUserReply) {
     option (google.api.http) = {
       get : "v1/user"
@@ -51,7 +55,7 @@ service User {
       body : "*"
     };
   };
-  // 登出（忽略）
+  // 登出（略）
   rpc UserLogout (UserLogoutRequest) returns (UserLogoutReply) {
     option (google.api.http) = {
       post : "v1/logout"
@@ -77,7 +81,7 @@ message CreateUserReply {
   UserDetail userDetail = 1;
 }
 
-// todo：ajax请求，忽略
+// todo：页面异步请求，忽略
 //// 确认密码符合格式要求
 //message VerifyPasswordRequest {
 //  string userName = 1;
