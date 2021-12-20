@@ -3,6 +3,9 @@ syntax = "proto3";
 package api.user.v1;
 
 import "google/api/annotations.proto";
+// protoc-gen-validate的validate生成文件后，包含// no validation rules for ...。目前仍未解决。所以不建议用validate
+// xxx:https://github.com/envoyproxy/protoc-gen-validate/issues/240
+import "validate/validate.proto";
 
 // 建议包名简称为"service_版本号"，不支持点号连接
 option go_package = "double/api/user/v1;user_v1";
@@ -72,16 +75,17 @@ message UserDetail {
 }
 
 // 创建角色（角色名、俱乐部名称唯一）
+// 限制规则：https://github.com/envoyproxy/protoc-gen-validate#constraint-rules
 message CreateUserRequest {
-  string userName = 1; // todo:validator:not empty
-  string password = 2;
-  string clubName = 3;
+  string userName = 1 [(validate.rules).string = {min_len: 1, max_len: 50}]; // 注解validate：string character 1 to 50
+  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 50}];
+  string clubName = 3 [(validate.rules).string = {min_len: 1, max_len: 50}];
 }
 message CreateUserReply {
   UserDetail userDetail = 1;
 }
 
-// todo：页面异步请求，忽略
+// 页面异步请求，略
 //// 确认密码符合格式要求
 //message VerifyPasswordRequest {
 //  string userName = 1;
@@ -112,7 +116,7 @@ message CreateUserReply {
 
 // 禁用角色，不会物理删除
 message BanUserRequest {
-  int64 id = 1;
+  int64 id = 1 [(validate.rules).int64.gt = 0];
 }
 message BanUserReply {
   bool res = 1;
@@ -120,7 +124,7 @@ message BanUserReply {
 
 // 改名
 message UpdateUserNameRequest {
-  int64 id = 1;
+  int64 id = 1 [(validate.rules).int64.gt = 0];
   string newUserName = 2;
 }
 message UpdateUserNameReply {
@@ -129,9 +133,9 @@ message UpdateUserNameReply {
 
 // 换密码
 message UpdateUserPasswordRequest {
-  int64 id = 1;
-  string oldUserPassword = 2;
-  string newUserPassword = 3;
+  int64 id = 1 [(validate.rules).int64.gt = 0];
+  string oldUserPassword = 2 [(validate.rules).string = {min_len: 6, max_len: 50}];
+  string newUserPassword = 3 [(validate.rules).string = {min_len: 6, max_len: 50}];
 }
 message UpdateUserPasswordReply {
   bool res = 1;
@@ -139,7 +143,7 @@ message UpdateUserPasswordReply {
 
 // 查询单一角色信息
 message GetUserRequest {
-  int64 id = 1;
+  int64 id = 1 [(validate.rules).int64.gt = 0];
 }
 message GetUserReply {
   UserDetail userDetail = 1;
@@ -154,8 +158,8 @@ message ListUserReply {
 
 // 登录
 message UserLoginRequest {
-  string userName = 1;
-  string password = 2;
+  string userName = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 50}];
 }
 
 message UserLoginReply {
@@ -165,7 +169,7 @@ message UserLoginReply {
 
 // 登出
 message UserLogoutRequest {
-  int64 id = 1;
+  int64 id = 1 [(validate.rules).int64.gt = 0];
 }
 
 message UserLogoutReply {

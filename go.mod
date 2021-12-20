@@ -3,6 +3,7 @@ module double
 go 1.16
 
 require (
+	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/fatih/structs v1.1.0
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-kratos/consul v0.1.5
@@ -15,8 +16,14 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2 // indirect
 	github.com/hashicorp/consul/api v1.12.0
+	github.com/iancoleman/strcase v0.2.0 // indirect
+	github.com/lyft/protoc-gen-star v0.5.3 // indirect
+	github.com/spf13/afero v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	golang.org/x/mod v0.5.0 // indirect
+	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
 	golang.org/x/sys v0.0.0-20211213223007-03aa0b5f6827 // indirect
+	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
 	google.golang.org/grpc v1.43.0
 	google.golang.org/protobuf v1.27.1
