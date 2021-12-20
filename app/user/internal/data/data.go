@@ -2,7 +2,7 @@ package data
 
 import (
 	_ "context"
-	"double/internal/conf"
+	"double/app/user/internal/conf"
 	consul "github.com/go-kratos/consul/registry"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"

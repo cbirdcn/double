@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"double/internal/biz"
+	"double/app/user/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
 	"time"
 

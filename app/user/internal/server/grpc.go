@@ -2,8 +2,8 @@ package server
 
 import (
 	v1 "double/api/user/v1"
-	"double/internal/conf"
-	"double/internal/service"
+	"double/app/user/internal/conf"
+	"double/app/user/internal/service"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"

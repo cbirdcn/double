@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 	"double/api/user/v1"
-	"double/internal/biz"
+	"double/app/user/internal/biz"
 	"github.com/fatih/structs"
 	"github.com/go-kratos/kratos/v2/log"
 	"golang.org/x/crypto/bcrypt"

@@ -186,6 +186,7 @@ func (x *Data) GetRedis() *Data_Redis {
 	return nil
 }
 
+// 注册中心
 type Registry struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

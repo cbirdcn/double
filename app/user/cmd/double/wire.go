@@ -5,11 +5,11 @@
 package main
 
 import (
-	"double/internal/biz"
-	"double/internal/conf"
-	"double/internal/data"
-	"double/internal/server"
-	"double/internal/service"
+	"double/app/user/internal/biz"
+	"double/app/user/internal/conf"
+	"double/app/user/internal/data"
+	"double/app/user/internal/server"
+	"double/app/user/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
