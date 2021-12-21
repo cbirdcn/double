@@ -3,7 +3,7 @@ syntax = "proto3";
 package api.user.v1;
 import "errors/errors.proto";
 
-option go_package = "double/api/user/v1;user_v1";
+option go_package = "user/api/user/v1;user_v1";
 
 enum ErrorReason {
   option (errors.default_code) = 500;

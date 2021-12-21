@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package api.club.v1;
+import "google/api/annotations.proto";
+option go_package = "user/api/club/v1;club_v1";
+
+service Club {
+	rpc CreateClub (CreateClubRequest) returns (CreateClubReply);
+	rpc UpdateClub (UpdateClubRequest) returns (UpdateClubReply);
+	rpc DeleteClub (DeleteClubRequest) returns (DeleteClubReply);
+	rpc GetClub (GetClubRequest) returns (GetClubReply) {
+		option (google.api.http) = {
+			get : "v1/club/{id}"
+		};
+	};
+	rpc ListClub (ListClubRequest) returns (ListClubReply);
+}
+
+message CreateClubRequest {}
+message CreateClubReply {}
+
+message UpdateClubRequest {}
+message UpdateClubReply {}
+
+message DeleteClubRequest {}
+message DeleteClubReply {}
+
+message GetClubRequest {
+	int64 id = 1;
+}
+message GetClubReply {}
+
+message ListClubRequest {}
+message ListClubReply {}

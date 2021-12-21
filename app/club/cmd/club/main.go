@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/registry"
 	"os"
 
-	"double/app/user/internal/conf"
-	"github.com/go-kratos/kratos/v2"
+	"double/app/club/internal/conf"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
@@ -18,7 +18,7 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name = "double"
+	Name = "club"
 	// Version is the version of the compiled software.
 	Version = "1.0.0"
 	// flagconf is the config flag.

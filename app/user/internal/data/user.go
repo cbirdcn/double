@@ -2,7 +2,7 @@ package data
 
 import (
 	"context"
-	"double/api/user/v1"
+	user_v1 "double/api/user/v1"
 	"double/app/user/internal/biz"
 	"github.com/fatih/structs"
 	"github.com/go-kratos/kratos/v2/log"
@@ -76,7 +76,7 @@ func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) (int64, error
 
 func (r *userRepo) BanUser(ctx context.Context, id int64) (bool, error) {
 	if !r.UserIdCheckExist(ctx, id) {
-		return false, user_v1.ErrorUserNotFound("user id not found: %d", id)
+		return false, user_v1.ErrorUserNotFound("user id not found: %user", id)
 	}
 
 	values := make(map[string]interface{})
@@ -89,7 +89,7 @@ func (r *userRepo) BanUser(ctx context.Context, id int64) (bool, error) {
 
 func (r *userRepo) UpdateUserName(ctx context.Context, id int64, newUserName string) (bool, error) {
 	if !r.UserIdCheckExist(ctx, id) {
-		return false, user_v1.ErrorUserNotFound("user id not found: %d", id)
+		return false, user_v1.ErrorUserNotFound("user id not found: %user", id)
 	}
 
 	// 新角色名已存在
@@ -121,7 +121,7 @@ func (r *userRepo) UpdateUserName(ctx context.Context, id int64, newUserName str
 
 func (r *userRepo) UpdateUserPassword(ctx context.Context, newUserPassword string, user *biz.User) (bool, error) {
 	if !r.UserIdCheckExist(ctx, user.ID) {
-		return false, user_v1.ErrorUserNotFound("user id not found: %d", user.ID)
+		return false, user_v1.ErrorUserNotFound("user id not found: %user", user.ID)
 	}
 
 	// 旧密码正确

@@ -1,3 +1,7 @@
-.idea
+../../.idea
 bin
-protoc-gen-validate.v0.1.0.tar.gz
+.idea/double.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/webResources.xml

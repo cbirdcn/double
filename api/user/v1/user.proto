@@ -8,7 +8,7 @@ import "google/api/annotations.proto";
 import "validate/validate.proto";
 
 // 建议包名简称为"service_版本号"，不支持点号连接
-option go_package = "double/api/user/v1;user_v1";
+option go_package = "user/api/user/v1;user_v1";
 
 service User {
   // 增

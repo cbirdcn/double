@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package api.club.v1;
+import "errors/errors.proto";
+
+option go_package = "user/api/club/v1;club_v1";
+
+enum ErrorReason {
+  option (errors.default_code) = 500;
+  CLUB_NOT_FOUND = 0 [(errors.code) = 404];
+}
