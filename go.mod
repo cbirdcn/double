@@ -16,6 +16,9 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2 // indirect
 	github.com/hashicorp/consul/api v1.12.0
+	go.opentelemetry.io/otel v1.3.0
+	go.opentelemetry.io/otel/exporters/jaeger v1.3.0
+	go.opentelemetry.io/otel/sdk v1.3.0
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
 	golang.org/x/sys v0.0.0-20211213223007-03aa0b5f6827 // indirect

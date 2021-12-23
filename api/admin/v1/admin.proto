@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api.admin.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "admin/api/admin/v1;admin_v1";
+
+// admin后台
+service Admin {
+  // 支持http协议查看玩家列表（暂无分页）
+  rpc ListUser (ListUserRequest) returns (ListUserReply) {
+    option (google.api.http) = {
+      get : "admin/v1/user"
+    };
+  };
+}
+
+message UserDetail {
+  int64 id = 1;
+  string userName = 2;
+  string clubName = 3;
+  string createdAt = 4;
+}
+
+message ListUserRequest {
+}
+message ListUserReply {
+  repeated UserDetail userDetails = 1;
+}

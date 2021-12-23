@@ -1,24 +1,27 @@
 package main
 
 import (
+	"double/app/admin/internal/conf"
 	"flag"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/registry"
-	"os"
-
-	"double/app/club/internal/conf"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"os"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name = "club"
+	Name = "admin"
 	// Version is the version of the compiled software.
 	Version = "1.0.0"
 	// flagconf is the config flag.
@@ -79,8 +82,22 @@ func main() {
 	if err := c.Scan(&rc); err != nil {
 		panic(err)
 	}
+	// jaeger支持服务间路由追踪，提供ui
+	// https://www.cnblogs.com/whuanle/p/14598049.html
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(bc.Trace.Endpoint)))
+	if err != nil {
+		panic(err)
+	}
+	// trace内容
+	tp := tracesdk.NewTracerProvider(
+		tracesdk.WithBatcher(exp),
+		tracesdk.WithResource(resource.NewSchemaless(
+			semconv.ServiceNameKey.String(Name),
+		)),
+	)
 
-	app, cleanup, err := initApp(bc.Server, &rc, bc.Data, logger)
+
+	app, cleanup, err := initApp(bc.Server, &rc, bc.Data, logger, tp)
 	if err != nil {
 		panic(err)
 	}

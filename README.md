@@ -17,11 +17,24 @@ go get -u github.com/go-kratos/kratos/cmd/kratos/v2@latest
 
 ## Docker
 
-部署golang容器，开放8000做http端口，9000做rpc端口
+### golang
+```shell
+docker run -itd -p 8880:8000 -p 9990:9000 --name golang2 -v /Users/gaea/docker/golang/workspace:/workspace --workdir /workspace golang
+```
+### 其他
+```shell
+# redis容器开放6379，pika就开放7272
+
+# jaeger容器默认端口
+docker run -d -p 5775:5775/udp -p 16686:16686 -p 14250:14250 -p 14268:14268 jaegertracing/all-in-one:latest
+
+# 
+```
 
 ## 注册中心
 
-consul:docker官方容器，默认开放8500端口。不需要注册中心需要修改main.go与data/data.go，去掉registry部分
+### consul
+docker官方容器，默认开放8500端口。不需要注册中心需要修改main.go与data/data.go，去掉registry部分
 
 ## RUN
 项目根路径下
@@ -58,7 +71,10 @@ consul:docker官方容器，默认开放8500端口。不需要注册中心需要
 
 repo：可以用go-redis@v8 连接redis，支持并发唯一自增id。rpc服务超时时间1.2s。自增id每秒分配50。
 
-userService：rpc与http ok。可以注册到consul
+userService：rpc与http ok。注册到consul
 
 clubService：初始化完毕。rpc doing
+
+adminService:后台服务，服务发现demo。支持consul发现、调用其他service。通过jaeger查看服务间trace过程
+
 
