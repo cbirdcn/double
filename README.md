@@ -5,6 +5,13 @@
 足球俱乐部养成游戏，原型为[hattrick](https://m.hattrick.org/)
 - rpc
 - http
+- 服务注册与发现
+- consul配置中心
+- 自增唯一id
+- redis快速存储
+- docker
+- jaeger service trace
+- fluent日志收集
 
 
 ## By Bilibili Kratos
@@ -28,7 +35,8 @@ docker run -itd -p 8880:8000 -p 9990:9000 --name golang2 -v /Users/gaea/docker/g
 # jaeger容器默认端口
 docker run -d -p 5775:5775/udp -p 16686:16686 -p 14250:14250 -p 14268:14268 jaegertracing/all-in-one:latest
 
-# 
+# fluentd
+docker run -d -p 24224:24224 -p 24224:24224/udp fluent/fluentd:v1.3-debian-1 
 ```
 
 ## 注册中心
@@ -71,10 +79,19 @@ docker官方容器，默认开放8500端口。不需要注册中心需要修改m
 
 repo：可以用go-redis@v8 连接redis，支持并发唯一自增id。rpc服务超时时间1.2s。自增id每秒分配50。
 
-userService：rpc与http ok。注册到consul
+userService：账号管理。支持rpc与http。注册到consul server
 
-clubService：初始化完毕。rpc doing
+clubService：常规rpc service。初始化完毕。doing。为了完成目标，可能会简化业务
 
-adminService:后台服务，服务发现demo。支持consul发现、调用其他service。通过jaeger查看服务间trace过程
+adminService:后台管理服务，服务发现demo。支持consul发现、调用其他service。配置不再读本地，改读consul配置中心。通过jaeger查看服务间trace过程
 
+## 计划
+目前最重要的部分都已完工或有demo体现。
 
+官方文档支持的功能中，只有部分middleware没有涉及。包括middleware传递metadata，监控Prometheus，Auth认证鉴权，熔断与限流。
+
+短时间内不打算支持ent/Gorm，因为不考虑mysql作为存储对象。有计划将redis替换成pika。
+
+暂时不考虑efk，目前只支持fluent收集日志。可以把efk实现BI系统作为最后目标。
+
+swagger需要看官方更新，目前存在一些问题。

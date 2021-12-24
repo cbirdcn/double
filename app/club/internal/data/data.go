@@ -1,13 +1,13 @@
 package data
 
 import (
-	"context"
-	userv1 "double/api/user/v1"
+	//"context"
+	//userv1 "double/api/user/v1"
 	"double/app/club/internal/conf"
 	consul "github.com/go-kratos/consul/registry"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
+	//"github.com/go-kratos/kratos/v2/transport/grpc"
 	_ "github.com/go-kratos/kratos/v2/transport/grpc"
 	_ "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/go-redis/redis/extra/redisotel"

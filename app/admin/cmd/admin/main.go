@@ -22,6 +22,7 @@ import (
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"os"
+	"github.com/go-kratos/kratos/contrib/log/fluent/v2"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -60,7 +61,24 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, rr registry.Reg
 func main() {
 	// flag解析命令行参数
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
+	// 日志记录方式1：默认stdout
+	//logger := log.With(log.NewStdLogger(os.Stdout),
+	//	"ts", log.DefaultTimestamp,
+	//	"caller", log.DefaultCaller,
+	//	"service.id", id,
+	//	"service.name", Name,
+	//	"service.version", Version,
+	//	"trace_id", tracing.TraceID(),
+	//	"span_id", tracing.SpanID(),
+	//)
+	// 日志记录方式2：fluentd服务器
+	loggerSource, err := fluent.NewLogger("tcp://host.docker.internal:24224")
+	if err != nil {
+		panic(err)
+	}
+	//flog := log.NewHelper(logger)
+	//flog.Debug("%s log test", "fluent")
+	logger := log.With(loggerSource,
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", id,

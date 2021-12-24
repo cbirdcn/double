@@ -65,6 +65,8 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	return userDetail, nil
 }
 func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+	// 当前服务的日志
+	s.log.WithContext(ctx).Infof("%s service running", "user")
 	list, _ := s.uc.List(ctx)
 	res := make([]*pb.UserDetail, 0)
 	for _,v := range list {

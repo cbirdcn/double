@@ -10,6 +10,8 @@ import (
 //}
 
 func (s *AdminService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+	//s.log.WithContext(ctx).Infof("%s service running", "admin")
+	s.log.Debugf("%s service running", "admin")
 	// 调用其他服务use case的方法
 	list, _ := s.uc.List(ctx)
 	res := make([]*pb.UserDetail, 0)
