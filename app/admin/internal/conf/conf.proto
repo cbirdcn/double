@@ -56,6 +56,7 @@ message Registry {
   message Consul {
     string address = 1;
     string scheme = 2;
+    string key = 3; // 当前app的配置（一个路径+key名）
   }
   Consul consul = 1;
 }

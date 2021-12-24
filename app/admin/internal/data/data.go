@@ -4,7 +4,6 @@ import (
 	"context"
 	userv1 "double/api/user/v1"
 	"double/app/admin/internal/conf"
-	"fmt"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-redis/redis/v8"
@@ -111,7 +110,6 @@ func NewDiscovery(conf *conf.Registry) registry.Discovery {
 //}
 // 分离写法
 func NewUserServiceClient(r registry.Discovery, tp *tracesdk.TracerProvider) userv1.UserClient {
-	fmt.Println(r)
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint("discovery:///user"), // 格式：<schema>://[namespace]/<service-name>

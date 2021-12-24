@@ -2,3 +2,4 @@
 consul:
   address: host.docker.internal:8500
   scheme: http
+  key: "app/admin/configs"

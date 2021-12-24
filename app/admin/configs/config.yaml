@@ -1,4 +1,5 @@
 #添加trace（需要提前开启jaeger容器）
+#下面的内容仅用于本地调试，线上需要上传的配置中心。配置key在registry.yaml
 trace:
   endpoint: http://host.docker.internal:14268/api/traces
 server:
