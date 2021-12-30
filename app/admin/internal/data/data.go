@@ -4,8 +4,10 @@ import (
 	"context"
 	userv1 "double/api/user/v1"
 	"double/app/admin/internal/conf"
+
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/selector/wrr"
 	"github.com/go-redis/redis/v8"
 
 	//"fmt"
@@ -19,6 +21,9 @@ import (
 	"github.com/google/wire"
 	consulAPI "github.com/hashicorp/consul/api"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+
+	//"github.com/go-kratos/kratos/v2/selector/p2c"
+	"github.com/go-kratos/kratos/v2/selector/filter"
 )
 
 // ProviderSet is data providers.
@@ -45,7 +50,7 @@ func NewData(c *conf.Data, uc userv1.UserClient, logger log.Logger) (*Data, func
 	rdb.AddHook(redisotel.TracingHook{})
 	d := &Data{
 		rdb: rdb,
-		uc: uc,
+		uc:  uc,
 	}
 
 	return d, func() {
@@ -110,10 +115,17 @@ func NewDiscovery(conf *conf.Registry) registry.Discovery {
 //}
 // 分离写法
 func NewUserServiceClient(r registry.Discovery, tp *tracesdk.TracerProvider) userv1.UserClient {
+	// 创建路由Filter：筛选版本号为"2.0.0"的实例
+	filterCase := filter.Version("1.0.0")
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint("discovery:///user"), // 格式：<schema>://[namespace]/<service-name>
 		grpc.WithDiscovery(r),
+		// 由于gRPC框架的限制只能使用全局balancer name的方式来注入selector
+		// http用p2c
+		grpc.WithBalancerName(wrr.Name),
+		// 通过grpc.WithFilter注入路由Filter(WithSelectFilter可能换成了WithFilter)
+		grpc.WithFilter(filterCase),
 		grpc.WithMiddleware(
 			tracing.Client(tracing.WithTracerProvider(tp)),
 			recovery.Recovery(),

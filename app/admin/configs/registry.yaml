@@ -1,5 +1,5 @@
 #线上用注册中心的配置，所以配置文件独立
 consul:
-  address: host.docker.internal:8500
+  address: 172.21.0.3:8500
   scheme: http
   key: "app/admin/configs"

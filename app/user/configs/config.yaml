@@ -8,9 +8,9 @@ server:
 data:
   database:
     driver: mysql
-    source: root:root@tcp(host.docker.internal:3306)/test
+    source: root:root@tcp(172.21.0.16:3306)/test
   redis:
-    addr: host.docker.internal:6379
+    addr: 172.21.0.2:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
     db: 11

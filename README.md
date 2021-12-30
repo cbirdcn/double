@@ -26,8 +26,13 @@ go get -u github.com/go-kratos/kratos/cmd/kratos/v2@latest
 
 ### golang
 ```shell
+docker run -itd -p 8880:8000 -p 9990:9000 --name golang -v /Users/gaea/docker/golang/workspace:/workspace --workdir /workspace golang
+```
+golang2容器用于负载均衡测试
+```shell
 docker run -itd -p 8880:8000 -p 9990:9000 --name golang2 -v /Users/gaea/docker/golang/workspace:/workspace --workdir /workspace golang
 ```
+
 ### 其他
 ```shell
 # redis容器开放6379，pika就开放7272
@@ -38,6 +43,13 @@ docker run -d -p 5775:5775/udp -p 16686:16686 -p 14250:14250 -p 14268:14268 jaeg
 # fluentd
 docker run -d -p 24224:24224 -p 24224:24224/udp fluent/fluentd:v1.3-debian-1 
 ```
+容器部署后，涉及到多容器间数据交互时，如果对性能测试有要求，不能配置host.docker.internal，需要让容器在同一网段（比如connect same network），否则影响性能。
+
+经测试涉及服务间交互的ListUser过程（grpc，1989字节）
+```shell
+curl 127.0.0.1:8002/admin/v1/user
+```
+在jaeger UI显示平均耗时在10-15ms之间
 
 ## 注册中心
 
