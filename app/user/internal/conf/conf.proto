@@ -42,8 +42,14 @@ message Data {
     int32 min_idle_conns = 9;
     google.protobuf.Duration max_conn_age = 10;
   }
+  message Mongo {
+    string addr = 1;
+    uint64 max_pool_size = 2;
+    google.protobuf.Duration max_idle_time_ms = 3;
+  }
   Database database = 1;
   Redis redis = 2;
+  Mongo mongo = 3;
 }
 
 // 注册中心

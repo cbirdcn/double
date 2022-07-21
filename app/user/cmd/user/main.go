@@ -27,7 +27,9 @@ var (
 )
 
 func init() {
+	// 计划将命令行参数解析到全局变量
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
+	// 因为flag.Parse方法必须在所有选项都定义之后调用，且flag.Parse调用之后不能再定义选项。所以将选项定义都放在init中，main函数中执行flag.Parse时所有选项都已经定义了。
 }
 
 func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, rr registry.Registrar) *kratos.App {
@@ -47,6 +49,7 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, rr registry.Reg
 
 func main() {
 	flag.Parse()
+	// 标准输出log->stdout
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
@@ -78,6 +81,7 @@ func main() {
 		panic(err)
 	}
 
+	// 通过wire_gen，用配置参数实例化newApp()的参数，并执行newApp()生成kratos app
 	app, cleanup, err := initApp(bc.Server, &rc, bc.Data, logger)
 	if err != nil {
 		panic(err)

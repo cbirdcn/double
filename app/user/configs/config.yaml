@@ -8,9 +8,14 @@ server:
 data:
   database:
     driver: mysql
-    source: root:root@tcp(172.21.0.16:3306)/test
+    source: root:root@tcp(host.docker.internal:3306)/test
   redis:
-    addr: 172.21.0.2:6379
+    addr: host.docker.internal:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
     db: 11
+  mongo:
+    addr: mongodb://admin:admin@host.docker.internal:27017/
+    max_pool_size: 100
+    max_idle_time_ms: 5s
+
