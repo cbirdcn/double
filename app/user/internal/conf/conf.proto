@@ -30,6 +30,12 @@ message Data {
     string driver = 1;
     string source = 2;
   }
+  message MySQL {
+    string source = 1;
+    int32 max_open_conns = 2;
+    int32 max_idle_conns = 3;
+    google.protobuf.Duration max_life_time = 4;
+  }
   message Redis {
     string network = 1;
     string addr = 2;
@@ -48,8 +54,9 @@ message Data {
     google.protobuf.Duration max_idle_time_ms = 3;
   }
   Database database = 1;
-  Redis redis = 2;
-  Mongo mongo = 3;
+  MySQL mysql = 2;
+  Redis redis = 3;
+  Mongo mongo = 4;
 }
 
 // 注册中心

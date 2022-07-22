@@ -7,8 +7,13 @@ server:
     timeout: 1.2s
 data:
   database:
-    driver: mysql
-    source: root:root@tcp(host.docker.internal:3306)/test
+    driver:
+    source:
+  mysql:
+    source: root:root@tcp(host.docker.internal:3306)/
+    max_open_conns: 100
+    max_idle_conns: 100
+    max_life_time: 1s
   redis:
     addr: host.docker.internal:6379
     read_timeout: 0.2s
@@ -17,5 +22,5 @@ data:
   mongo:
     addr: mongodb://admin:admin@host.docker.internal:27017/
     max_pool_size: 100
-    max_idle_time_ms: 5s
+    max_idle_time_ms: 1s
 

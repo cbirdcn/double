@@ -4,6 +4,7 @@ import (
 	"context"
 	"double/app/user/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 
 	pb "double/api/user/v1"
@@ -17,6 +18,27 @@ type UserService struct {
 
 func NewUserService(uc *biz.UserUseCase, logger log.Logger) *UserService {
 	return &UserService{uc: uc, log: log.NewHelper(logger)}
+}
+
+// proto中定义了对应的rpc service，这里要通过biz层useCase提供的业务逻辑操作方法实现service
+
+// 创建账号，并返回创建好的账号信息
+func (s *UserService) CreateAccount(ctx context.Context, req *pb.CreateAccountRequest) (*pb.CreateAccountReply, error) {
+	res, err := s.uc.CreateAccountAndReturnAll(ctx, &biz.Account{
+		AccountName:  req.AccountName,
+		Password:  req.Password,
+	})
+	var accountDetail *pb.CreateAccountReply
+	// mongo官方driver将查询结果存储在bson.M类型也就是map中，需要转成原类型，再转为客户端可接收的类型
+	if res != nil || err == nil {
+		accountDetail = &pb.CreateAccountReply{AccountDetail: &pb.AccountDetail{
+			Id:          res["_id"].(primitive.ObjectID).Hex(),
+			AccountName: res["account_name"].(string),
+			CreatedAt:   res["created_at"].(primitive.DateTime).Time().Local().Format("2006-01-02 15:04:05"),
+			Status:      res["status"].(int32),
+		}}
+	}
+	return accountDetail, err
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {

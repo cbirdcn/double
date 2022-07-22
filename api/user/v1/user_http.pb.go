@@ -19,6 +19,7 @@ const _ = http.SupportPackageIsVersion1
 
 type UserHTTPServer interface {
 	BanUser(context.Context, *BanUserRequest) (*BanUserReply, error)
+	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
@@ -30,6 +31,7 @@ type UserHTTPServer interface {
 
 func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r := s.Route("/")
+	r.POST("v1/account", _User_CreateAccount0_HTTP_Handler(srv))
 	r.POST("v1/user", _User_CreateUser0_HTTP_Handler(srv))
 	r.PUT("v1/user_ban/{id}", _User_BanUser0_HTTP_Handler(srv))
 	r.PUT("v1/user_update_name/{id}", _User_UpdateUserName0_HTTP_Handler(srv))
@@ -38,6 +40,25 @@ func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r.GET("v1/user", _User_ListUser0_HTTP_Handler(srv))
 	r.POST("v1/login", _User_UserLogin0_HTTP_Handler(srv))
 	r.POST("v1/logout", _User_UserLogout0_HTTP_Handler(srv))
+}
+
+func _User_CreateAccount0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateAccountRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, "/api.user.v1.User/CreateAccount")
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateAccount(ctx, req.(*CreateAccountRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateAccountReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _User_CreateUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
@@ -206,6 +227,7 @@ func _User_UserLogout0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) e
 
 type UserHTTPClient interface {
 	BanUser(ctx context.Context, req *BanUserRequest, opts ...http.CallOption) (rsp *BanUserReply, err error)
+	CreateAccount(ctx context.Context, req *CreateAccountRequest, opts ...http.CallOption) (rsp *CreateAccountReply, err error)
 	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserReply, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	ListUser(ctx context.Context, req *ListUserRequest, opts ...http.CallOption) (rsp *ListUserReply, err error)
@@ -230,6 +252,19 @@ func (c *UserHTTPClientImpl) BanUser(ctx context.Context, in *BanUserRequest, op
 	opts = append(opts, http.Operation("/api.user.v1.User/BanUser"))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UserHTTPClientImpl) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...http.CallOption) (*CreateAccountReply, error) {
+	var out CreateAccountReply
+	pattern := "v1/account"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation("/api.user.v1.User/CreateAccount"))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

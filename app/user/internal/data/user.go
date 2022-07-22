@@ -6,8 +6,12 @@ import (
 	"double/app/user/internal/biz"
 	"github.com/fatih/structs"
 	"github.com/go-kratos/kratos/v2/log"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
+	"time"
 )
 
 type userRepo struct {
@@ -21,6 +25,63 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 		data: data,
 		log:  log.NewHelper(logger),
 	}
+}
+
+func (r *userRepo) CreateAccount(ctx context.Context, account *biz.Account) (interface{}, error) {
+	// TODO: transaction。要先部署多副本集。
+	collection := r.data.mdb.Database("global").Collection("account")
+
+	passwordHashString,err := PasswordHash(account.Password)
+	if err != nil {
+		return nil, user_v1.ErrorUnknownError("password hash error")
+	}
+
+	// TODO:避免无关字段返回，_id
+	filter := bson.D{
+		{"account_name", account.AccountName},
+	}
+	var res bson.M
+	err = collection.FindOne(ctx, filter).Decode(&res)
+	if err == nil || err != mongo.ErrNoDocuments {
+		return nil, user_v1.ErrorUserNameExist("account exist: %s", account.AccountName)
+	}
+
+	//cst, err := CstSh()
+	//if err != nil {
+	//	return nil, user_v1.ErrorUnknownError("zone info error")
+	//}
+	//now := time.Now().In(cst) // 使用操作系统/usr/share/zoneinfo的TZ
+	now := time.Now().Local()
+	data := bson.D{
+		{"account_name", account.AccountName},
+		{"password_hash", passwordHashString},
+		{"created_at", now}, // 注意，mongodb会存储为UTC+0，两者指同一时刻，只是展示方式不同
+		{"status", AccountStatusNormal},
+	}
+	result, err := collection.InsertOne(ctx, data)
+	if err != nil {
+		return nil, user_v1.ErrorUnknownError("insert error")
+	}
+
+	return result.InsertedID, nil
+}
+
+func (r *userRepo) GetAccountById(ctx context.Context, id primitive.ObjectID) (bson.M, error) {
+	collection := r.data.mdb.Database("global").Collection("account")
+
+	filter := bson.D{
+		{"_id", id},
+	}
+	var res bson.M
+	err := collection.FindOne(ctx, filter).Decode(&res)
+	if err != nil{
+		if err == mongo.ErrNoDocuments {
+			return res, user_v1.ErrorUserNotFound("account id not exist: %s", id)
+		}
+		return res, user_v1.ErrorUnknownError("get error")
+	}
+
+	return res, nil
 }
 
 func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) (int64, error) {

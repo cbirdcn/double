@@ -10,7 +10,15 @@ import "validate/validate.proto";
 // 建议包名简称为"service_版本号"，不支持点号连接
 option go_package = "user/api/user/v1;user_v1";
 
+// rpc+http service, REST api
 service User {
+  // 创建账号
+  rpc CreateAccount (CreateAccountRequest) returns (CreateAccountReply){
+    option (google.api.http) = {
+      post : "v1/account"
+      body : "*"
+    };
+  };
   // 增
   rpc CreateUser (CreateUserRequest) returns (CreateUserReply){
     option (google.api.http) = {
@@ -65,6 +73,21 @@ service User {
       body : "*"
     };
   };
+}
+
+message AccountDetail {
+  string id = 1; // ObjectId to string
+  string accountName = 2;
+  string createdAt = 3; // "Y-m-d H:i:s"
+  int32 status = 4;
+}
+
+message CreateAccountRequest {
+  string accountName = 1;
+  string password = 2;
+}
+message CreateAccountReply {
+  AccountDetail accountDetail = 1;
 }
 
 message UserDetail {

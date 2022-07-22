@@ -1,1 +1,12 @@
 # Data
+data层要实现biz层Repository接口声明的数据库操作方法
+
+biz层对数据库操作方法的实现逻辑是毫不知情的，这样做有利于轻松处理切换数据库或driver时对业务逻辑造成的侵入问题
+
+service调用biz中useCase提供的业务逻辑方法时，内部会调用此处实现的Repository的基本数据库操作方法。复杂业务逻辑方法可能会调用多个基本数据库操作方法。
+
+举例：
+
+biz层的Repository声明了find、save两个方法。data层均已实现。
+
+service调用biz层useCase提供的findAndSave()方法，里面就需要调用Repository的find()方法后，做出一些业务逻辑处理，再调用save()方法，才能实现service要求的功能。

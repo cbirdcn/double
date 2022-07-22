@@ -1,0 +1,2 @@
+use global
+db.account.createIndex({"account_name": 1}, {unique:true})
