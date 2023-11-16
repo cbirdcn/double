@@ -2,6 +2,7 @@ package server
 
 import (
 	v1 "double/api/user/v1"
+	"double/app/user/internal/biz"
 	"double/app/user/internal/conf"
 	"double/app/user/internal/service"
 	"github.com/go-kratos/kratos/v2/log"
@@ -12,12 +13,13 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, user *service.UserService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, user *service.UserService, logger log.Logger, useCase *biz.UserUseCase) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
 			tracing.Server(),
 			logging.Server(logger),
+			CheckToken(useCase),
 		),
 	}
 	if c.Grpc.Network != "" {

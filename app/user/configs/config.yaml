@@ -10,17 +10,17 @@ data:
     driver:
     source:
   mysql:
-    source: root:root@tcp(host.docker.internal:3306)/
+    source: root:root@tcp(172.21.0.23:3306)/
     max_open_conns: 100
     max_idle_conns: 100
     max_life_time: 1s
   redis:
-    addr: host.docker.internal:6379
+    addr: 172.21.0.22:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
     db: 11
   mongo:
-    addr: mongodb://admin:admin@host.docker.internal:27017/
+    addr: mongodb://admin:admin@172.21.0.15:27017/
     max_pool_size: 100
     max_idle_time_ms: 1s
 

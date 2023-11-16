@@ -19,6 +19,12 @@ service User {
       body : "*"
     };
   };
+  rpc AccountLogin (AccountLoginRequest) returns (AccountLoginReply){
+    option (google.api.http) = {
+      post : "v1/account_login"
+      body : "*"
+    };
+  };
   // 增
   rpc CreateUser (CreateUserRequest) returns (CreateUserReply){
     option (google.api.http) = {
@@ -87,6 +93,15 @@ message CreateAccountRequest {
   string password = 2;
 }
 message CreateAccountReply {
+  AccountDetail accountDetail = 1;
+}
+
+
+message AccountLoginRequest {
+  string accountName = 1;
+  string password = 2;
+}
+message AccountLoginReply {
   AccountDetail accountDetail = 1;
 }
 

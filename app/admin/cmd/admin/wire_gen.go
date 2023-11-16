@@ -21,6 +21,7 @@ import (
 
 // initApp init kratos application.
 // 添加*conf.Registry配置参数，用于在data中注入NewRegistrar
+// 添加trace
 func initApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Data, logger log.Logger, tracerProvider *trace.TracerProvider) (*kratos.App, func(), error) {
 	discovery := data.NewDiscovery(registry)
 	userClient := data.NewUserServiceClient(discovery, tracerProvider)

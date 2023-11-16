@@ -6,12 +6,13 @@ import "errors/errors.proto";
 option go_package = "user/api/user/v1;user_v1";
 
 enum ErrorReason {
-  option (errors.default_code) = 500;
+  // 不按照REST中http code规范定义错误码。而是默认http code=200，再加上返回值中的自定义错误码。
+  option (errors.default_code) = 200;
 
-  USER_NOT_FOUND = 0 [(errors.code) = 404];
-  CONTENT_MISSING = 1 [(errors.code) = 400];
-  UNKNOWN_ERROR = 1001;
-  USER_NAME_EXIST = 1002;
+  USER_NOT_FOUND = 0;
+  CONTENT_MISSING = 1;
+  UNKNOWN_ERROR = 1001 [(errors.code) = 500];
+  USER_NAME_EXIST = 1002 [(errors.code) = 404];
   CLUB_NAME_EXIST = 1003;
   USER_PASSWORD_DIFFERENT = 1004;
   USER_PASSWORD_EXIST = 1005;

@@ -13,20 +13,20 @@ const _ = errors.SupportPackageIsVersion1
 
 func IsUserNotFound(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_NOT_FOUND.String() && e.Code == 404
+	return e.Reason == ErrorReason_USER_NOT_FOUND.String() && e.Code == 200
 }
 
 func ErrorUserNotFound(format string, args ...interface{}) *errors.Error {
-	return errors.New(404, ErrorReason_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
 func IsContentMissing(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_CONTENT_MISSING.String() && e.Code == 400
+	return e.Reason == ErrorReason_CONTENT_MISSING.String() && e.Code == 200
 }
 
 func ErrorContentMissing(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_CONTENT_MISSING.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_CONTENT_MISSING.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUnknownError(err error) bool {
@@ -40,63 +40,63 @@ func ErrorUnknownError(format string, args ...interface{}) *errors.Error {
 
 func IsUserNameExist(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_NAME_EXIST.String() && e.Code == 500
+	return e.Reason == ErrorReason_USER_NAME_EXIST.String() && e.Code == 404
 }
 
 func ErrorUserNameExist(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_USER_NAME_EXIST.String(), fmt.Sprintf(format, args...))
+	return errors.New(404, ErrorReason_USER_NAME_EXIST.String(), fmt.Sprintf(format, args...))
 }
 
 func IsClubNameExist(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_CLUB_NAME_EXIST.String() && e.Code == 500
+	return e.Reason == ErrorReason_CLUB_NAME_EXIST.String() && e.Code == 200
 }
 
 func ErrorClubNameExist(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_CLUB_NAME_EXIST.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_CLUB_NAME_EXIST.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUserPasswordDifferent(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_PASSWORD_DIFFERENT.String() && e.Code == 500
+	return e.Reason == ErrorReason_USER_PASSWORD_DIFFERENT.String() && e.Code == 200
 }
 
 func ErrorUserPasswordDifferent(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_USER_PASSWORD_DIFFERENT.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_USER_PASSWORD_DIFFERENT.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUserPasswordExist(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_PASSWORD_EXIST.String() && e.Code == 500
+	return e.Reason == ErrorReason_USER_PASSWORD_EXIST.String() && e.Code == 200
 }
 
 func ErrorUserPasswordExist(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_USER_PASSWORD_EXIST.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_USER_PASSWORD_EXIST.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUserNameSame(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_NAME_SAME.String() && e.Code == 500
+	return e.Reason == ErrorReason_USER_NAME_SAME.String() && e.Code == 200
 }
 
 func ErrorUserNameSame(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_USER_NAME_SAME.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_USER_NAME_SAME.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUserBanned(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_BANNED.String() && e.Code == 500
+	return e.Reason == ErrorReason_USER_BANNED.String() && e.Code == 200
 }
 
 func ErrorUserBanned(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_USER_BANNED.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_USER_BANNED.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUserMakeAutoIdFail(err error) bool {
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_MAKE_AUTO_ID_FAIL.String() && e.Code == 500
+	return e.Reason == ErrorReason_USER_MAKE_AUTO_ID_FAIL.String() && e.Code == 200
 }
 
 func ErrorUserMakeAutoIdFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, ErrorReason_USER_MAKE_AUTO_ID_FAIL.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_USER_MAKE_AUTO_ID_FAIL.String(), fmt.Sprintf(format, args...))
 }

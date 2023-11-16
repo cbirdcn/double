@@ -31,6 +31,7 @@ func (r *userRepo) CreateAccount(ctx context.Context, account *biz.Account) (int
 	// TODO: transaction。要先部署多副本集。
 	collection := r.data.mdb.Database("global").Collection("account")
 
+	// 注意：bcrypt是慢哈希，耗时久，比md5、sha1等更适合做密码哈希
 	passwordHashString,err := PasswordHash(account.Password)
 	if err != nil {
 		return nil, user_v1.ErrorUnknownError("password hash error")

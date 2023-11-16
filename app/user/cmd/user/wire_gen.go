@@ -28,8 +28,8 @@ func initApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Da
 	userRepo := data.NewUserRepo(dataData, logger)
 	userUseCase := biz.NewUserUseCase(userRepo, logger)
 	userService := service.NewUserService(userUseCase, logger)
-	httpServer := server.NewHTTPServer(confServer, userService, logger)
-	grpcServer := server.NewGRPCServer(confServer, userService, logger)
+	httpServer := server.NewHTTPServer(confServer, userService, logger, userUseCase)
+	grpcServer := server.NewGRPCServer(confServer, userService, logger, userUseCase)
 	registrar := data.NewRegistrar(registry)
 	app := newApp(logger, httpServer, grpcServer, registrar)
 	return app, func() {
